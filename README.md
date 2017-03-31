@@ -106,17 +106,96 @@ writeToS3:
     Ref: MyServiceBucket
 ```
 
-Deploy. If you look at the Lambda web console now, you should see it in the "Environment variables" 
-section at the bottom of the Code tab.
+Deploy. 
 
-
-
-```javascript
-message: 'Go Serverless v1.0! Your function will write to !' + process.env.bucket,
+```bash
+npm run sls -- deploy
 ```
 
+If you look at the Lambda web console now, you should see it in the "Environment variables" 
+section at the bottom of the Code tab.
+
+Now let's write to S3. At the top of handler.js, import the AWS SDK. They have automatically
+made this available as part of the Lambda NodeJS environment.
+
+```javascript
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3();
+```
+
+Make the S3 API call.
+
+```javascript
+module.exports.writeToS3 = (event, context, callback) => {
+
+  // Get the bucket name out of the environment variables.
+  const bucket = process.env.bucket;
+  
+  // Prepare params for making S3 API call.
+  const params = {
+    Bucket: bucket,
+    Key: "testFile.txt",
+    Body: "I am a test text file"
+  }
+  
+  let message;
+  // Make the API call.
+  s3.putObject(params, function(err, data) {
+    // Check whether it completed successfully.
+    if (err) {
+      console.log(err, err.stack)
+      message = "Something went wrong " + err;
+    } else {
+      message = "Wrote successfully to " + bucket + " " + data;
+    }
+
+    // Trigger final callback now that this function is done.
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: message,
+        input: event,
+      }),
+    };
+    callback(null, response);
+  })
+```
+
+Since we only changed the function, we don't need to deploy the whole Serverless stack
+
+```bash
+npm run sls -- deploy function --function writeToS3
+```
+
+Try running the function with "Test" button again now.
 
 ## Permissions
+
+It didn't work! Your Lambda function was denied access. This is because we haven't set up any permissions.
+
+We'll need to give the IAM (Identity & Access Management) role of the Lambda permission to write to 
+the S3 bucket in serverless.yml. Unfortunately Serverless don't support individual IAM roles per 
+Lambda function just yet so this will apply to all Lambda functions in this service.
+
+```yaml
+# you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: Allow
+      Action: s3:PutObject
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - Ref: MyServiceBucket
+            - "/*"
+```
+
+Deploy the stack.
+
+```bash
+npm run sls -- deploy
+```
+
 
 ## Slack Integration
 
