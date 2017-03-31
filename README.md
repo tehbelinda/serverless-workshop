@@ -280,3 +280,5 @@ to delete them, and it can't remove the bucket until the files within are gone)
 ```bash
 npm run sls -- remove
 ```
+
+Delete Slack command integration.
