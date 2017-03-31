@@ -1,9 +1,25 @@
 'use strict';
 
 const AWS = require("aws-sdk")
+const querystring = require("querystring")
+
 const s3 = new AWS.S3();
 
+const SLACK_TOKEN = "<INSERT YOUR TOKEN HERE>";
+
 module.exports.writeToS3 = (event, context, callback) => {
+  const queryParams = querystring.parse(event.body);
+
+  // Verify the request came from Slack.
+  if (queryParams.token != SLACK_TOKEN) {
+    const response = {
+      statusCode: 403,
+      body: JSON.stringify({
+        errorMessage: "Sorry but you are not Slack"
+      })
+    }
+    callback(null, response);
+  }
 
   // Get the bucket name out of the environment variables.
   const bucket = process.env.bucket;

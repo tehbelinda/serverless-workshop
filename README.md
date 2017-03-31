@@ -196,7 +196,45 @@ Deploy the stack.
 npm run sls -- deploy
 ```
 
-
 ## Slack Integration
 
-- Slack hook
+We need to create a HTTP endpoint as a event source so Slack can post to our Lambda function.
+Serverless has provides syntax to configure this API Gateway without us having to ever directly use 
+API Gateway (but you can go look at it in the web console if you'd like)
+
+```yaml
+functions:
+  writeToS3:
+    description: Writes a file to S3
+    handler: handler.writeToS3
+    events:
+      - http:
+          path: myService/s3
+          method: post
+    environment:
+      bucket:
+        Ref: MyServiceBucket
+```
+
+Deploy the stack
+
+```bash
+npm run sls -- deploy
+```
+
+If you look at your Stack in CloudFormation now, you'll see that Serverless has automatically
+added an Output for you so you can see your Service Endpoint. Keep this URL handy.
+
+Now we need to set up the Slack command. Go to 
+https://shoesofprey.slack.com/apps/manage /custom-integrations > Slash commands > Add integration
+
+Choose a command, e.g. /swbel and hit Add
+
+Copy the service endpoint URL from CloudFormation into the URL field in Slack.
+Add the path we configured in serverless.yml, e.g. /myService/s3
+
+Copy the Slack token - keep this handy.
+
+Save the new configuration.
+
+
