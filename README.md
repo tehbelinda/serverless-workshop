@@ -102,8 +102,9 @@ We can do this by passing in the resource's logical ID into the function specifi
 writeToS3:
   description: Writes a file to S3
   handler: handler.writeToS3
-  bucket:
-    Ref: MyServiceBucket
+  environment:
+    bucket:
+      Ref: MyServiceBucket
 ```
 
 Deploy. 
