@@ -67,6 +67,10 @@ functions:
   writeToS3:
     description: Writes a file to S3
     handler: handler.writeToS3
+    events:
+      - http:
+          path: myService/s3
+          method: post
     environment:
       bucket:
         Ref: MyServiceBucket
