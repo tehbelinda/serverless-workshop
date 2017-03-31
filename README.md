@@ -237,4 +237,46 @@ Copy the Slack token - keep this handy.
 
 Save the new configuration.
 
+Now in handler.js, modify the writeToS3 function to handle incoming POST requests from Slack.
 
+```javascript
+const AWS = require("aws-sdk")
+const querystring = require("querystring")
+
+const s3 = new AWS.S3();
+
+const SLACK_TOKEN = "<INSERT TOKEN HERE>";
+
+module.exports.writeToS3 = (event, context, callback) => {
+  const queryParams = querystring.parse(event.body);
+
+  // Verify the request came from Slack.
+  if (queryParams.token != SLACK_TOKEN) {
+    const response = {
+      statusCode: 403,
+      body: JSON.stringify({
+        errorMessage: "Sorry but you are not Slack"
+      })
+    }
+    callback(null, response);
+  }
+```
+
+Deploy the function
+
+```bash
+npm run sls -- deploy function --function writeToS3
+```
+
+## Exercise
+
+Make the file name and contents dynamic arguments from Slack.
+
+## Clean up
+
+Delete the files from your S3 MyServiceBucket (since Serverless didn't make them it doesn't know 
+to delete them, and it can't remove the bucket until the files within are gone)
+
+```bash
+npm run sls -- remove
+```
