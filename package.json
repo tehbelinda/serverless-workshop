@@ -1,0 +1,24 @@
+{
+  "name": "serverless-workshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless": "^1.10.1"
+  },
+  "scripts": {
+    "sls": "sls",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tehbelinda/serverless-workshop.git"
+  },
+  "author": "Belinda Teh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tehbelinda/serverless-workshop/issues"
+  },
+  "homepage": "https://github.com/tehbelinda/serverless-workshop#readme"
+}
