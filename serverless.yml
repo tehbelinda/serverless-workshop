@@ -55,8 +55,12 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  writeToS3:
+    description: Writes a file to S3
+    handler: handler.writeToS3
+    environment:
+      bucket:
+        Ref: MyServiceBucket
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

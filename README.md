@@ -75,6 +75,49 @@ resources:
         BucketName: serverless-workshop-${self:provider.stage}
 ```
 
+## Lambda function
+
+Now lets make our Lambda function write to the S3 bucket. Instead of hello, call it
+writeToS3.
+
+In serverless.yml
+
+```yaml
+functions:
+  writeToS3:
+    description: Writes a file to S3
+    handler: handler.writeToS3
+```
+
+In handler.js
+
+```javascript
+module.exports.writeToS3 = (event, context, callback) => {
+```
+
+Next we need to tell our Lambda function which bucket to use. 
+We can do this by passing in the resource's logical ID into the function specific environment variables.
+
+```yaml
+writeToS3:
+  description: Writes a file to S3
+  handler: handler.writeToS3
+  bucket:
+    Ref: MyServiceBucket
+```
+
+Deploy. If you look at the Lambda web console now, you should see it in the "Environment variables" 
+section at the bottom of the Code tab.
+
+
+
+```javascript
+message: 'Go Serverless v1.0! Your function will write to !' + process.env.bucket,
+```
+
+
+## Permissions
+
 ## Slack Integration
 
 - Slack hook
