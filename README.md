@@ -63,7 +63,17 @@ To check everything is working, hit the Test button and save.
 We will configure AWS resources using CloudFormation in serverless.yml so that we represent
 infrastructure as code.
 
+Note use of variables
 
+```yaml
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    MyServiceBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: serverless-workshop-${self:provider.stage}
+```
 
 ## Slack Integration
 
