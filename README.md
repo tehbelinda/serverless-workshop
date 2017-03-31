@@ -29,15 +29,41 @@ npm run sls
 
 ## Service Creation
 
-Create new serverless service
+Create new serverless service using the AWS NodeJS template.
 
 ```
-serverless create --template aws-nodejs --name myService
+npm run sls -- create --template aws-nodejs --name myService
 ```
+
+This should create the configuration file (serverless.yml) and a sample function (handler.js)
+that prints out a message.
+
+Update your stage to your name in serverless.yml
+```yaml
+# you can overwrite defaults here
+#  stage: dev <-- UPDATE THIS
+#  region: us-east-1
+```
+
+Let's test that this works so far. Deploy your stack
+
+```
+npm run sls -- deploy
+```
+
+You should be able to view its progress in 
+https://console.aws.amazon.com/cloudformation
+
+Once that's done, we can see our Lambda function in
+https://console.aws.amazon.com/lambda
+To check everything is working, hit the Test button and save. 
 
 ## AWS Resources
 
-- Configure AWS resources using CloudFormation in serverless.yml
+We will configure AWS resources using CloudFormation in serverless.yml so that we represent
+infrastructure as code.
+
+
 
 ## Slack Integration
 
